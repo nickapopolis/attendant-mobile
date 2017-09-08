@@ -8,46 +8,34 @@ import {
 	TouchableHighlight
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { loginClick, passwordChanged, loginChangeForm } from '../actions/login';
-import { MKTextField } from 'react-native-material-kit';
+import { loginClick, loginChangeForm } from '../actions/login';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Actions } from 'react-native-router-flux';
 import { color } from 'react-native-material-design-styles';
+import FormTextField from '../components/form-text-field';
+
 class LoginView extends Component {
 	render() {
-		
 		return (
 			<View style={styles.container}>
 				<View style={styles.titleContainer}>
 					<Icon name="automobile" size={75} style={styles.logo} />
-					<Image source={require('./attendant.png')} />
+					<Image source={require('../images/attendant.png')} />
 				</View>
 				<View style={styles.loginFormContainer}>
-					<MKTextField
-						tintColor={color.paperGrey50.color}
-						textInputStyle={{ color: color.paperGrey50.color }}
-						placeholder='Username'
-						underlineSize={1}
-						text={'hi'}
-						name="username"
-						value={this.props.user.username}
-						onChange={this.props.loginChangeForm.bind(this)}
-						placeholderTextColor={color.paperGrey300.color}
-					></MKTextField>
-					<MKTextField
-						placeholderTextColor={color.paperGrey300.color}
-						tintColor={color.paperGrey50.color}
-						textInputStyle={{ color: color.paperGrey50.color }}
-						underlineSize={1}
-						secureTextEntry={true}
-						name="password"
-						value={this.props.user.password}
-						onChange={this.props.loginChangeForm.bind(this)}
-						placeholder='Password'
-					/>
+					<FormTextField
+						field='email'
+						caption="E-mail"
+						value={this.props.email}
+						fieldChanged={this.props.loginChangeForm.bind(this)}/>
+					<FormTextField
+						field='password'
+						caption="Password"
+						value={this.props.password}
+						fieldChanged={this.props.loginChangeForm.bind(this)}
+						password={true}/>
 					<TouchableHighlight
 						style={styles.signIn}
-						onPress={ this.props.onLoginClick.bind(this)}>
+						onPress={this.props.onLoginClick.bind(this)}>
 						<Text style={styles.signInText}>Submit</Text>
 					</TouchableHighlight>
 					<Text style={styles.text}>Sign up here</Text>
@@ -71,8 +59,6 @@ const styles = StyleSheet.create({
 	},
 	loginFormContainer: {
 		flex: 1
-	},
-	textField: {
 	},
 	text: {
 		marginBottom: 10,
@@ -98,17 +84,12 @@ const styles = StyleSheet.create({
 	logo: {
 		color: secondary,
 		textAlign: 'center'
-	},
-	title: {
-		fontSize: 50,
-		width: 100,
-		color: secondary,
-		textAlign: 'center'
 	}
 });
 LoginView.propTypes = {
 	dispatch: PropTypes.func,
-	user: PropTypes.object,
+	email: PropTypes.string,
+	password: PropTypes.string,
 	onLoginClick: PropTypes.func,
 	passwordChanged: PropTypes.func,
 	loginChangeForm: PropTypes.func
@@ -118,23 +99,18 @@ LoginView.displayName = 'LoginView';
 
 const mapStateToProps = (state) => {
 	return {
-		user: state.login.user
+		email: state.login.email,
+		password: state.login.password
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		loginChangeForm: (event) => {
-			dispatch(loginChangeForm({
-				[event.target.name]: event.target.value 
-			}));
+		loginChangeForm: (change) => {
+			dispatch(loginChangeForm(change));
 		},
-		onLoginClick: () => {
-			dispatch(loginClick(this.state.name, this.state.password));
-			Actions.tabbar();
-		},
-		passwordChanged: (identity, password) => {
-			return dispatch(passwordChanged(identity, password));
+		onLoginClick: function(){
+			dispatch(loginClick(this.props.email, this.props.password));
 		}
 	};
 };

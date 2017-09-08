@@ -8,11 +8,11 @@ export function loginChangeForm(change) {
 	);
 }
 export const LOGIN_CLICK = 'LOGIN_CLICK';
-export function loginClick(name, password) {
+export function loginClick(email, password) {
 	return (dispatch) => {
 		setTimeout(function () {
 			var sessionMock = '12345';
-			dispatch(loginSuccess(name, sessionMock));
+			dispatch(loginSuccess(email, sessionMock));
 		}, 100);
 	};
 }

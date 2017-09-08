@@ -4,16 +4,19 @@ import {
 } from '../actions/login';
 import _ from 'lodash';
 const initialState = {
-	sessionId: null,
-	user: {}
+	email: null,
+	password: null
 };
 export default function (state = initialState, action) {
 	switch (action.type) {
 	case LOGIN_SUCCESS:
 		return state;
-		//return _.extend(state, action);
 	case LOGIN_CHANGE_FORM:
-		return _.extend(state.user, state.user || {}, action);
+		state =  _.extend({}, state, _.pick(action, [
+			'email',
+			'password'
+		]));
+		return state;
 	default:
 		return state;
 	}
